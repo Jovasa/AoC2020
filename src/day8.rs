@@ -23,10 +23,37 @@ fn first(){
         ops.push((data[0].to_string(), value));
     }
 
+    let (value, _, used_codes) = run_code(&mut ops);
+    println!("{}", value);
+    for index in used_codes{
+        let index = index as usize;
+        let (value, code) = match ops[index].0.as_ref() {
+            "nop" => {
+                let mut ops_ = ops.to_vec();
+                ops_[index].0 = "jmp".to_string();
+                let (a, b, _) = run_code(& mut ops_);
+                (a, b)
+            },
+            "jmp" => {
+                let mut ops_ = ops.to_vec();
+                ops_[index].0 = "nop".to_string();
+                let (a, b, _) = run_code(& mut ops_);
+                (a, b)
+            },
+            _ => continue,
+        };
+        if code as usize >= ops.len() {
+            println!("{}", value);
+            break;
+        }
+    }
+}
+
+fn run_code(ops: &mut Vec<(String, i32)>) -> (i32, i32, HashSet<i32>) {
     let mut used_codes = HashSet::new();
     let mut proc_counter: i32 = 0;
     let mut value = 0;
-    while !used_codes.contains(&proc_counter){
+    while !used_codes.contains(&proc_counter) && (proc_counter as usize) < ops.len() {
         used_codes.insert(proc_counter);
         let (op, param) = &ops[proc_counter as usize];
         match op.as_ref() {
@@ -38,8 +65,11 @@ fn first(){
             },
             _ => panic!()
         }
+        if proc_counter < 0 {
+            panic!("Negative program counter");
+        }
     }
-    println!("{}", value);
+    (value, proc_counter, used_codes)
 }
 
 fn main() {
