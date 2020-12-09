@@ -8,7 +8,7 @@ fn main() {
 }
 
 fn second() {
-    let mut numbers = read_file_of_numbers("data/day1.txt");
+    let mut numbers = read_file_of_numbers::<i32>("data/day1.txt");
     numbers.sort();
 
     for i in 0..numbers.len() {
@@ -30,7 +30,7 @@ fn second() {
 }
 
 fn first() {
-    let numbers = read_file_of_numbers("data/day1.txt");
+    let numbers = read_file_of_numbers::<i32>("data/day1.txt");
 
     for i in 0..numbers.len() {
         for j in i + 1..numbers.len() {
