@@ -6,12 +6,12 @@ enum Operation {
     Add,
 }
 
-fn parse_paranthesis(a: &mut dyn Iterator<Item = char>) -> i64 {
+fn parse_parenthesis(a: &mut dyn Iterator<Item = char>) -> i64 {
     let mut previous = 0;
     let mut op: Option<Operation> = None;
     while let Some(c) = a.next() {
         let current  = match c {
-            '(' => parse_paranthesis(a),
+            '(' => parse_parenthesis(a),
             ')' => return previous,
             '*' => {
                 op = Some(Operation::Multi);
@@ -32,13 +32,13 @@ fn parse_paranthesis(a: &mut dyn Iterator<Item = char>) -> i64 {
     }
     previous
 }
-fn parse_paranthesis_str(a: &mut dyn Iterator<Item = String>) -> i64 {
+fn parse_parenthesis_str(a: &mut dyn Iterator<Item = String>) -> i64 {
     let mut previous = 0;
     let mut op: Option<Operation> = None;
     while let Some(c) = a.next() {
         let temp = c.as_ref();
         let current  = match temp {
-            "(" => parse_paranthesis_str(&mut parse_additions(a).into_iter()),
+            "(" => parse_parenthesis_str(&mut parse_additions(a).into_iter()),
             ")" => return previous,
             "*" => {
                 op = Some(Operation::Multi);
@@ -66,7 +66,7 @@ fn parse_additions(a: &mut dyn Iterator<Item = String>) -> Vec<String> {
     while let Some(c) = a.next() {
         let temp = c.as_ref();
         let current  = match temp {
-            "(" => parse_paranthesis_str(&mut parse_additions(a).into_iter()),
+            "(" => parse_parenthesis_str(&mut parse_additions(a).into_iter()),
             ")" => {
                 out.push(previous.to_string());
                 return out;
@@ -119,7 +119,7 @@ fn first() {
             }
             data.into_iter()
         };
-        sum += parse_paranthesis(&mut a);
+        sum += parse_parenthesis(&mut a);
     }
     println!("{}", sum);
 }
@@ -143,7 +143,7 @@ fn second () {
             }
             data.into_iter()
         };
-        sum += parse_paranthesis_str(&mut parse_additions(&mut a).into_iter());
+        sum += parse_parenthesis_str(&mut parse_additions(&mut a).into_iter());
     }
     println!("{}", sum);
 }
