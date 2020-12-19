@@ -59,11 +59,39 @@ fn first() {
 
     let mut count = 0;
     for line in data[1].trim().split("\n") {
-        let (found, length) = check(0, &rules, line, 0);
-        println!("{} {} {}", line, length, found);
-        if found && length == line.len() {
-            count += 1;
+        let mut starts = vec![0];
+        loop {
+            let (found, length) = check(42, &rules, line, *starts.last().unwrap());
+            if found {
+                starts.push(length + *starts.last().unwrap());
+            }
+            else {
+                break;
+            }
         }
+        if starts.len() < 3 {
+            continue;
+        }
+        let mut previous = *starts.last().unwrap();
+        let mut tails = 0;
+        loop {
+            let (found, length) = check(31, &rules, line, previous);
+            tails += 1;
+            if found && length + previous == line.len() {
+                if tails < starts.len() - 1{
+                    count += 1;
+                }
+                break;
+            }
+            else if found{
+                previous += length;
+            }
+            else {
+                break;
+            }
+
+        }
+
     }
     println!("{}", count);
 }
